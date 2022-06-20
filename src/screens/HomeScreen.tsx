@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { getData, postData } from '../api/Api'
 
 export const HomeScreen = ({ navigation }: any) => {
-    const [notes, setNotes] = useState<any[]>([]);
-    const [done, setDone] = useState<any[]>([]);
-    const [todo, setTodo] = useState<any[]>([]);
+    const [notes, setNotes] = useState<any>([]);
+    // const [done, setDone] = useState<any[]>([]);
+    // const [todo, setTodo] = useState<any[]>([]);
 
     useEffect(() => {
         getNotes()
@@ -18,7 +18,6 @@ export const HomeScreen = ({ navigation }: any) => {
 
     }, [])
 
-
     const getNotes = async () => {
         let arr: any = [];
         await getData()
@@ -26,11 +25,11 @@ export const HomeScreen = ({ navigation }: any) => {
                 response.map((item: any, index: any) => {
                     arr.push({
                         title: item.content,
-                        data: [{
+                        data: {
                             important: item.important,
-                            id: item.id,
                             done: item.done,
-                        }]
+                        },
+                        index: index + 1,
 
                     })
                 })
@@ -40,24 +39,17 @@ export const HomeScreen = ({ navigation }: any) => {
 
     return (
         <View style={styles.container}>
-            <SectionList
-                sections={notes}
-                keyExtractor={(item, index) => item + index}
-                renderItem={({ item }) => (
-                    <View>
-                        <Text>{item.id}</Text>
-                    </View>
-                )}
-                renderSectionHeader={({ section }) => (
-                    <View>
-                        <Text style={{ fontSize: 20 }}>{section.title}</Text>
-                    </View>
-                )}
-                style={{
-                    flex: 1,
-                }}
-                showsHorizontalScrollIndicator={false}
-            />
+            <View style={{ flexDirection: 'column' }}>
+                {notes.map((item: any, index: any) => {
+                    return (
+                        <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
+                            <Text key={index} style={{ fontSize: 20 }}>{item.title}</Text>
+                            <Text>{item.index}</Text>
+                        </View>
+                    )
+
+                })}
+            </View>
             <View style={styles.button}>
                 <Icon name='add' size={30} color={'white'} style={{ fontWeight: 'bold' }} onPress={
                     () => navigation.navigate('New Note')}
@@ -71,7 +63,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        paddingHorizontal: 15
     },
     title: {
         fontWeight: 'bold',
