@@ -30,7 +30,6 @@ export const HomeScreen = ({ navigation }: any) => {
                             done: item.done,
                         },
                         index: index + 1,
-
                     })
                 })
             })
@@ -47,7 +46,6 @@ export const HomeScreen = ({ navigation }: any) => {
                             <Text>{item.index}</Text>
                         </View>
                     )
-
                 })}
             </View>
             <View style={styles.button}>
