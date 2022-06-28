@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Alert, FlatList, SafeAreaView, SectionList } from 'react-native'
-import { Divider } from 'react-native-flex-layout'
+import { View, Text, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { getData, postData } from '../api/Api'
 
@@ -27,8 +26,8 @@ export const HomeScreen = ({ navigation }: any) => {
                         title: item.content,
                         data: {
                             important: item.important,
-                            done: item.done,
                         },
+                        done: item.done,
                         index: index + 1,
                     })
                 })
@@ -38,16 +37,29 @@ export const HomeScreen = ({ navigation }: any) => {
 
     return (
         <View style={styles.container}>
-            <View style={{ flexDirection: 'column' }}>
-                {notes.map((item: any, index: any) => {
+            {notes.map((item: any, index: any) => {
+                return (
+                    <View style={{ flexDirection: 'column' }}>
+                        {(item.done === false) ?
+                            <View>
+                                <Text>POR HACER</Text>
+                                <Text>{item.title}</Text>
+                            </View>
+                            : null
+                        }
+                    </View>)
+            })}
+
+            {/* {notes.map((item: any, index: any) => {
                     return (
-                        <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
-                            <Text key={index} style={{ fontSize: 20 }}>{item.title}</Text>
-                            <Text>{item.index}</Text>
+                        <View>
+                            <View key={index} style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
+                                <Text key={index} style={{ fontSize: 20 }}>{item.title}</Text>
+                                <Text>{item.index}</Text>
+                            </View>
                         </View>
                     )
-                })}
-            </View>
+                })} */}
             <View style={styles.button}>
                 <Icon name='add' size={30} color={'white'} style={{ fontWeight: 'bold' }} onPress={
                     () => navigation.navigate('New Note')}
