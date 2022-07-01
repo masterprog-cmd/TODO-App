@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
+import { RadioButton } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { getData, postData } from '../api/Api'
+import { getData } from '../api/Api'
 
 export const HomeScreen = ({ navigation }: any) => {
     const [notes, setNotes] = useState<any>([]);
+    const [value, setValue] = useState('');
     // const [done, setDone] = useState<any[]>([]);
     // const [todo, setTodo] = useState<any[]>([]);
 
@@ -23,43 +26,53 @@ export const HomeScreen = ({ navigation }: any) => {
             .then(response => {
                 response.map((item: any, index: any) => {
                     arr.push({
+                        id: index,
                         title: item.content,
-                        data: {
-                            important: item.important,
-                        },
-                        done: item.done,
-                        index: index + 1,
+                        // data: {
+                        //     important: item.important,
+                        // },
+                        // done: item.done,
+                        // index: index + 1,
                     })
                 })
             })
         return arr;
     }
 
+    const Item = ({ title }: any) => (
+        <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
+            <View>
+                <RadioButton.Item label={title} value={title} color={'black'} />
+            </View>
+
+        </RadioButton.Group>
+    )
+
+    const renderItem = ({ item }: any) => (
+        <Item title={item.title} />
+    )
+
     return (
         <View style={styles.container}>
-            {notes.map((item: any, index: any) => {
-                return (
-                    <View style={{ flexDirection: 'column' }}>
-                        {(item.done === false) ?
-                            <View>
-                                <Text>POR HACER</Text>
-                                <Text>{item.title}</Text>
+            {/* {notes.map((data: any) => { */}
+            {/* return ( */}
+            <View style={{ flexDirection: 'column' }}>
+                {/* {(data.done !== false) ? */}
+                <View>
+                    <FlatList
+                        data={notes}
+                        renderItem={renderItem}
+                        keyExtractor={(item: any) => item.id}
+                    />
+                </View>
+                {/* : <View>
+                                <Text>HECHOS</Text>
+                                <Text>{data.title}</Text>
                             </View>
-                            : null
-                        }
-                    </View>)
-            })}
+                        } */}
+            </View>
+            {/* })} */}
 
-            {/* {notes.map((item: any, index: any) => {
-                    return (
-                        <View>
-                            <View key={index} style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
-                                <Text key={index} style={{ fontSize: 20 }}>{item.title}</Text>
-                                <Text>{item.index}</Text>
-                            </View>
-                        </View>
-                    )
-                })} */}
             <View style={styles.button}>
                 <Icon name='add' size={30} color={'white'} style={{ fontWeight: 'bold' }} onPress={
                     () => navigation.navigate('New Note')}
