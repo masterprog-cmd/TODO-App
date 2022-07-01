@@ -6,18 +6,25 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { getData } from '../api/Api'
 
 export const HomeScreen = ({ navigation }: any) => {
-    const [notes, setNotes] = useState<any>([]);
+    // const [notes, setNotes] = useState<any>([]);
     const [value, setValue] = useState('');
-    // const [done, setDone] = useState<any[]>([]);
-    // const [todo, setTodo] = useState<any[]>([]);
+    const [done, setDone] = useState<any[]>([]);
+    const [todo, setTodo] = useState<any>();
 
     useEffect(() => {
         getNotes()
             .then(res => {
-                setNotes(res);
+                res.map((item: any) => {
+                    console.log(item)
+                    if (item.done === true) {
+                        setDone([item])
+                    } else {
+                        setTodo([item])
+                    }
+                })
                 // console.log(JSON.stringify(res));
             })
-
+        console.log(todo)
     }, [])
 
     const getNotes = async () => {
@@ -28,11 +35,11 @@ export const HomeScreen = ({ navigation }: any) => {
                     arr.push({
                         id: index,
                         title: item.content,
-                        // data: {
-                        //     important: item.important,
-                        // },
-                        // done: item.done,
-                        // index: index + 1,
+                        data: {
+                            important: item.important,
+                        },
+                        done: item.done,
+                        index: index + 1,
                     })
                 })
             })
@@ -54,25 +61,16 @@ export const HomeScreen = ({ navigation }: any) => {
 
     return (
         <View style={styles.container}>
-            {/* {notes.map((data: any) => { */}
-            {/* return ( */}
             <View style={{ flexDirection: 'column' }}>
-                {/* {(data.done !== false) ? */}
                 <View>
                     <FlatList
-                        data={notes}
+                        data={todo}
                         renderItem={renderItem}
                         keyExtractor={(item: any) => item.id}
                     />
                 </View>
-                {/* : <View>
-                                <Text>HECHOS</Text>
-                                <Text>{data.title}</Text>
-                            </View>
-                        } */}
-            </View>
-            {/* })} */}
 
+            </View>
             <View style={styles.button}>
                 <Icon name='add' size={30} color={'white'} style={{ fontWeight: 'bold' }} onPress={
                     () => navigation.navigate('New Note')}
