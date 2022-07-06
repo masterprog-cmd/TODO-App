@@ -14,13 +14,13 @@ export const StackNavigator = () => {
         <Stack.Navigator
             initialRouteName="Login"
             screenOptions={{
-                headerShown: false,
+                headerShown: true,
                 headerTitleAlign: 'center',
             }}
         >
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Registro" component={RegistroScreen} />
-            <Stack.Screen name="Home Screen" component={HomeScreen} options={{ headerShown: true, headerLeft: () => null }} />
+            <Stack.Screen name="Home Screen" component={HomeScreen} options={{ headerShown: true, headerTitle: 'Notes', headerLeft: () => null }} />
             <Stack.Screen name="New Note" component={NewNote} options={{ headerShown: true }} />
         </Stack.Navigator>
     )

@@ -1,28 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet, InteractionManager, Text } from 'react-native'
+import { Divider } from 'react-native-flex-layout'
 import { FlatList } from 'react-native-gesture-handler'
 import { RadioButton } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { getData } from '../api/Api'
 
 export const HomeScreen = ({ navigation }: any) => {
-    // const [notes, setNotes] = useState<any>([]);
+    const [notes, setNotes] = useState<any>([]);
     const [value, setValue] = useState('');
     const [done, setDone] = useState<any[]>([]);
-    const [todo, setTodo] = useState<any>();
+    const [todo, setTodo] = useState<any>([]);
 
     useEffect(() => {
         getNotes()
             .then(res => {
-                res.map((item: any) => {
-                    console.log(item)
-                    if (item.done === true) {
-                        setDone([item])
-                    } else {
-                        setTodo([item])
-                    }
-                })
-                // console.log(JSON.stringify(res));
+                setNotes(res)
             })
         console.log(todo)
     }, [])
@@ -33,7 +26,7 @@ export const HomeScreen = ({ navigation }: any) => {
             .then(response => {
                 response.map((item: any, index: any) => {
                     arr.push({
-                        id: index,
+                        id: item.id,
                         title: item.content,
                         data: {
                             important: item.important,
@@ -42,14 +35,30 @@ export const HomeScreen = ({ navigation }: any) => {
                         index: index + 1,
                     })
                 })
+                groupNotes(arr);
             })
-        return arr;
     }
+
+    const groupNotes = (resp: any) => {
+        let arrTodo: any = [];
+        let arrDone: any = [];
+        resp.map((item: any) => {
+            if (item.done) {
+                arrDone.push(item)
+            } else {
+                arrTodo.push(item)
+            }
+        }
+        )
+        setTodo(arrTodo);
+        setDone(arrDone);
+    }
+
 
     const Item = ({ title }: any) => (
         <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
             <View>
-                <RadioButton.Item label={title} value={title} color={'black'} />
+                <RadioButton.Item label={title} value={title} color={'black'} onPress={() => { }} />
             </View>
 
         </RadioButton.Group>
@@ -63,8 +72,20 @@ export const HomeScreen = ({ navigation }: any) => {
         <View style={styles.container}>
             <View style={{ flexDirection: 'column' }}>
                 <View>
+                    <Text style={styles.titleText}>Por hacer</Text>
+                    <Divider color='black' style={styles.divider} />
                     <FlatList
                         data={todo}
+                        renderItem={renderItem}
+                        keyExtractor={(item: any) => item.id}
+                    />
+                </View>
+
+                <View style={{ marginTop: 50 }}>
+                    <Text style={styles.titleText}>Hechas</Text>
+                    <Divider color='black' style={styles.divider} />
+                    <FlatList
+                        data={done}
                         renderItem={renderItem}
                         keyExtractor={(item: any) => item.id}
                     />
@@ -90,9 +111,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'black'
     },
+    titleText: {
+        fontSize: 20, fontWeight: 'bold', marginLeft: 15, color: 'black'
+    },
+    divider: {
+        width: '90%', marginLeft: 15, marginTop: 5
+    },
     button: {
         position: 'absolute',
-        top: 620,
+        top: 580,
         right: 20,
         alignItems: 'center',
         justifyContent: 'center',
