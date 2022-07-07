@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, InteractionManager, Text } from 'react-native'
+import { View, StyleSheet, InteractionManager, Text, Alert } from 'react-native'
 import { Divider } from 'react-native-flex-layout'
 import { FlatList } from 'react-native-gesture-handler'
 import { RadioButton } from 'react-native-paper'
@@ -7,17 +7,15 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { getData } from '../api/Api'
 
 export const HomeScreen = ({ navigation }: any) => {
-    const [notes, setNotes] = useState<any>([]);
+    let notes: any = [];
     const [value, setValue] = useState('');
     const [done, setDone] = useState<any[]>([]);
     const [todo, setTodo] = useState<any>([]);
 
     useEffect(() => {
-        getNotes()
-            .then(res => {
-                setNotes(res)
-            })
-        console.log(todo)
+        getNotes();
+        console.log(todo);
+        console.log(done);
     }, [])
 
     const getNotes = async () => {
@@ -56,9 +54,9 @@ export const HomeScreen = ({ navigation }: any) => {
 
 
     const Item = ({ title }: any) => (
-        <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
+        <RadioButton.Group onValueChange={newValue => { Alert.alert('Fine!'); setValue(newValue); }} value={value}>
             <View>
-                <RadioButton.Item label={title} value={title} color={'black'} onPress={() => { }} />
+                <RadioButton.Item label={title} value={title} color={'black'} />
             </View>
 
         </RadioButton.Group>
