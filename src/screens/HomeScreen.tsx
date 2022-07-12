@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, InteractionManager, Text, Alert } from 'react-native'
+import { View, StyleSheet, Text, Alert } from 'react-native'
 import { Divider } from 'react-native-flex-layout'
 import { FlatList } from 'react-native-gesture-handler'
 import { RadioButton } from 'react-native-paper'
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     },
     button: {
         position: 'absolute',
-        top: 580,
+        top: 620,
         right: 20,
         alignItems: 'center',
         justifyContent: 'center',
