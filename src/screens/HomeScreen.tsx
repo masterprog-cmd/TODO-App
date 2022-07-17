@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, Alert } from 'react-native'
 import { Divider } from 'react-native-flex-layout'
 import { FlatList } from 'react-native-gesture-handler'
-import { RadioButton } from 'react-native-paper'
+import { ActivityIndicator, RadioButton } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { getData } from '../api/Api'
 
@@ -67,35 +67,42 @@ export const HomeScreen = ({ navigation }: any) => {
     )
 
     return (
-        <View style={styles.container}>
-            <View style={{ flexDirection: 'column' }}>
-                <View>
-                    <Text style={styles.titleText}>Por hacer</Text>
-                    <Divider color='black' style={styles.divider} />
-                    <FlatList
-                        data={todo}
-                        renderItem={renderItem}
-                        keyExtractor={(item: any) => item.id}
-                    />
-                </View>
+        <>
+            {(todo.length > 0 && done.length > 0) ?
+                (<View style={styles.container}>
+                    <View style={{ flexDirection: 'column' }}>
+                        <View>
+                            <Text style={styles.titleText}>Por hacer</Text>
+                            <Divider color='black' style={styles.divider} />
+                            <FlatList
+                                data={todo}
+                                renderItem={renderItem}
+                                keyExtractor={(item: any) => item.id}
+                            />
+                        </View>
 
-                <View style={{ marginTop: 50 }}>
-                    <Text style={styles.titleText}>Hechas</Text>
-                    <Divider color='black' style={styles.divider} />
-                    <FlatList
-                        data={done}
-                        renderItem={renderItem}
-                        keyExtractor={(item: any) => item.id}
-                    />
-                </View>
+                        <View style={{ marginTop: 50 }}>
+                            <Text style={styles.titleText}>Hechas</Text>
+                            <Divider color='black' style={styles.divider} />
+                            <FlatList
+                                data={done}
+                                renderItem={renderItem}
+                                keyExtractor={(item: any) => item.id}
+                            />
+                        </View>
 
-            </View>
-            <View style={styles.button}>
-                <Icon name='add' size={30} color={'white'} style={{ fontWeight: 'bold' }} onPress={
-                    () => navigation.navigate('New Note')}
-                />
-            </View>
-        </View>
+                    </View>
+                    <View style={styles.button}>
+                        <Icon name='add' size={30} color={'white'} style={{ fontWeight: 'bold' }} onPress={
+                            () => navigation.navigate('New Note')}
+                        />
+                    </View>
+                </View>) :
+                (<View style={{ ...styles.container, justifyContent: 'center' }}>
+                    <ActivityIndicator animating={true} color={'black'} size={'small'} />
+                </View>)
+            }
+        </>
     )
 }
 
